@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       animals: [],
-      uri: "http://localhost:3000/animals",
+      uri: "https://dev-animals-api.herokuapp.com/animals",
       selected: 'all'
     };
   },

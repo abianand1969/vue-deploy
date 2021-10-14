@@ -1,0 +1,22 @@
+ [{
+         "id": 1,
+         "firstName": "Anandan",
+         "lastName": "Subbiah",
+         "email": "subbiah.anandan@gmail.com",
+         "password": "pass@123"
+     },
+     {
+         "id": 2,
+         "firstName": "Raghav",
+         "lastName": "Anandan",
+         "email": "raghav.anandan@gmail.com",
+         "password": "pass@123"
+     },
+     {
+         "firstName": "Dheeraj",
+         "lastName": "Subbiah",
+         "email": "dheeraj.anandan@gmail.com",
+         "password": "dheer@123",
+         "id": 3
+     }
+ ]

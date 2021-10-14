@@ -1,14 +1,28 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from '../store'
 import Home from '../views/Home.vue'
 import Signup from '../components/auth/Signup.vue'
 import Login from '../components/auth/Login.vue'
 import Search from '../components/layout/Search.vue'
-import AnimalDashboard from '../components/animals/AnimalDashboard.vue'
-import Addanimal from '../components/animals/Addanimal.vue'
-import Editanimal from '../components/animals/Editanimal.vue'
+
+import ProductDashboard from '../components/products/ProductDashboard.vue'
+import AddProduct from '../components/products/AddProduct.vue'
+import EditProduct from '../components/products/EditProduct.vue'
+import Buy from '../components/products/Buy.vue'
+import OrderHistory from '../components/orders/OrderHistory.vue'
+import Profile from '../components/users/Profile.vue'
+import Details from '../components/products/Details.vue'
+
+
 
 const routes = [{
         path: '/',
+        redirect: { name: 'Home' }
+        // name: 'Home',
+        // component: Home
+    },
+    {
+        path: '/home',
         name: 'Home',
         component: Home
     },
@@ -23,37 +37,66 @@ const routes = [{
         component: Login
     },
     {
+        path: '/logout',
+        redirect: { name: 'Login' }
+    },
+    {
         path: '/search',
         name: 'Search',
         component: Search
     },
     {
-        path: '/dashboard',
-        name: 'AnimalDashboard',
-        component: AnimalDashboard,
+        path: '/profile',
+        name: 'Profile',
+        component: Profile
+    },
+    {
+        path: '/products',
+        name: 'ProductDashboard',
+        component: ProductDashboard,
         meta: {
-            isAuthenticated: true
+            requiresAuth: true
         }
     },
     {
-        path: '/addanimal',
-        name: 'Addanimal',
-        component: Addanimal
+        path: '/addProduct',
+        name: 'AddProduct',
+        component: AddProduct
     },
     {
-        path: '/editanimal/:id',
-        name: 'Editanimal',
-        component: Editanimal,
+        path: '/editProduct/:id',
+        name: 'EditProduct',
+        component: EditProduct,
         props: true
+    },
+    {
+        path: '/products/:id',
+        name: 'Details',
+        component: Details,
+        props: true
+    },
+    {
+        path: '/buy',
+        name: 'Buy',
+        component: Buy,
+        props: true
+    },
+    {
+        path: '/orderhistory',
+        name: 'OrderHistory',
+        component: OrderHistory,
+        props: true,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/about',
         name: 'About',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
+        //lazy loading component This would help to reduce overall vue bundle size
+        // but do it if you want
         component: () =>
-            import ( /* webpackChunkName: "about" */ '../views/About.vue')
+            import ('../views/About.vue')
     }
 ]
 
@@ -62,14 +105,16 @@ const router = createRouter({
     routes
 })
 
+//route guard
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(rec => rec.meta.isAuthenticated)) {
-        let user = localStorage.getItem('isLoggedin');
-        if (user === 'true') {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        //access the loggedin status from vuex store and decide the route access
+        if (store.getters.isLoggedIn) {
             next()
-        } else {
-            next({ name: 'Login' })
+            return
         }
+
+        next('/login')
     } else {
         next()
     }

@@ -1,35 +1,33 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import { reactive } from "vue";
-// import store from "./store";
+// import Vuex from 'vuex'
+import axios from 'axios'
+// import auth from './store/auth'
+// import count from './store/count'
+// import config from './store/config'
 
-const store = {
-    debug: true,
+import store from './store'
 
-    state: reactive({
-        isAuthenticated: false
-    }),
 
-    setIsAuthenticated(newValue) {
-        if (this.debug) {
-            console.log("setIsAuthenticated triggered with", newValue);
-        }
-
-        this.state.isAuthenticated = newValue;
-    },
-
-    clearLoggedin() {
-        if (this.debug) {
-            console.log("clearMessageAction triggered");
-        }
-
-        this.state.isAuthenticated = "";
-    },
-}
+// const store = new Vuex.Store({
+//     modules: {
+//         auth,
+//         count,
+//         config
+//     }
+// })
 
 const app = createApp(App)
-app.provide('store', store)
+    // app.provide('store', store)
 app.use(router)
-    // app.config.globalProperties.$store = store
+app.use(store)
+
+
+// app.config.globalProperties.$store = store
+app.config.globalProperties.$http = axios;
+const token = localStorage.getItem('token')
+if (token) {
+    app.config.globalProperties.$http.defaults.headers.common['Authorization'] = token
+}
 app.mount('#app')
